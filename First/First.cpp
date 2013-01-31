@@ -2,15 +2,17 @@
 #include "First.h"
 #include "CameraMAYA.h"
 #include "TimeManager.h"
+#include "Cube.h"
 
 const std::wstring g_strTitle = L"First by.Sol9";
-const unsigned int g_nWidth = 800;
-const unsigned int g_nHeight = 600;
+const unsigned int g_nWidth = 1600;
+const unsigned int g_nHeight = 900;
 
 IDirect3DDevice9* g_pd3dDevice = nullptr;
 ID3DXFont* g_pd3dFont = nullptr;
 Camera* g_pCamera = nullptr;
 TimeManager* g_pTimeManager = nullptr;
+Cube* g_pCube = nullptr;
 
 int g_nFPS = 0;
 int g_nFrame = 0;
@@ -122,9 +124,12 @@ int main()
 	return (int)msg.wParam;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (message)
+	if (g_pCamera)
+		g_pCamera->message(hWnd, Msg, wParam, lParam);
+
+	switch (Msg)
 	{
 	case WM_COMMAND :
 		switch (LOWORD(wParam))
@@ -134,7 +139,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
+			return DefWindowProc(hWnd, Msg, wParam, lParam);
 		}
 		break;
 
@@ -148,7 +153,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		return DefWindowProc(hWnd, Msg, wParam, lParam);
 	}
 
 	return 0;
@@ -178,10 +183,15 @@ void initialize()
 	//g_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	g_pTimeManager = new TimeManager;
+
+	g_pCube = new Cube(g_pd3dDevice, 80);
 }
 
 void cleanup()
 {
+	if (g_pCube)
+		delete g_pCube;
+
 	if (g_pCamera)
 		delete g_pCamera;
 
@@ -197,12 +207,15 @@ void cleanup()
 
 void update(unsigned int timeMs)
 {
+	g_pCube->update(timeMs);
 }
 
 void render()
 {
 	g_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(240, 240, 240), 1.0f, 0);
 	g_pd3dDevice->BeginScene();
+
+	g_pCube->render();
 
 	if (g_nFrame != g_nFPS)
 	{

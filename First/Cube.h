@@ -8,18 +8,20 @@ private:
 		float u, v;
 
 		TEXCOORD() : u(0.0f), v(0.0f) {}
+		TEXCOORD(float _u, float _v) : u(_u), v(_v) {}
 	};
 
 	struct VERTEX
 	{
 		D3DXVECTOR3 position;
 		D3DXVECTOR3 normal;
-		D3DCOLOR color;
 		TEXCOORD texcoord;
 
-		VERTEX() : position(), normal(), color(0), texcoord() {}
+		VERTEX() : position(), normal(), texcoord() {}
+		VERTEX(float _x, float _y, float _z, float _nx, float _ny, float _nz/*, float _u, float _v*/)
+			: position(_x, _y, _z), normal(_nx, _ny, _nz), texcoord(/*_u, _v*/) {}
 
-		enum {FVF = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)};
+		enum {FVF = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1)};
 	};
 
 	typedef std::vector<VERTEX> _Vertices;
@@ -29,6 +31,7 @@ private:
 		DWORD a, b, c;
 
 		INDEX() : a(0), b(0), c(0) {}
+		INDEX(DWORD _a, DWORD _b, DWORD _c) : a(_a), b(_b), c(_c) {}
 	};
 
 	typedef std::vector<INDEX> _Indices;
@@ -48,7 +51,7 @@ private:
 	D3DXMATRIX m_matWorld;
 
 public:
-	Cube(IDirect3DDevice9* pDevice);
+	Cube(IDirect3DDevice9* pDevice, float fSize);
 	~Cube();
 
 	void load(const std::wstring& stdFile);
@@ -56,6 +59,9 @@ public:
 	void render();
 
 private:
+	void _setupMesh(float fSize);
+	void _loadTexture(const std::wstring& strFile);
+
 	bool _initVertexShader();
 	bool _initPixelShader();
 };
