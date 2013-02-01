@@ -1,9 +1,9 @@
-#include "stdafx.h"
+#include "PCH.h"
 #include "Cube.h"
 
 //#define _SHADER_ON_
 
-Cube::Cube(IDirect3DDevice9* pDevice, float fSize)
+Cube::Cube(IDirect3DDevice9* pDevice, float fSize, const std::wstring& strFile)
 	: m_pDevice(pDevice)
 	, m_pVertex(nullptr), m_pIndex(nullptr), m_pTexture(nullptr)
 	, m_matWorld()
@@ -20,6 +20,7 @@ Cube::Cube(IDirect3DDevice9* pDevice, float fSize)
 #endif
 
 	_setupMesh(fSize);
+	_loadTexture(strFile);
 }
 
 Cube::~Cube()
@@ -48,13 +49,9 @@ Cube::~Cube()
 	////// shader
 }
 
-void Cube::load(const std::wstring& stdFile)
-{
-}
-
 void Cube::update(unsigned int timeMs)
 {
-	D3DXVECTOR3 vRotate(2.0f, 1.5f, 1.0f);
+	D3DXVECTOR3 vRotate(2.0f, 1.5f, 2.0f);
 	vRotate *= (float)timeMs / 1000.0f;
 
 	D3DXMATRIX matTemp;
@@ -88,11 +85,7 @@ void Cube::render()
 #endif
 
 	if (m_pTexture)
-	{
 		m_pDevice->SetTexture(0, m_pTexture);
-		m_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-		m_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	}
 
 	m_pDevice->SetStreamSource(0, m_pVertex, 0, sizeof(VERTEX));
 	m_pDevice->SetFVF(VERTEX::FVF);
@@ -106,37 +99,37 @@ void Cube::_setupMesh(float fSize)
 		return;
 
 	_Vertices v;
-	v.push_back(VERTEX(-fSize, fSize, -fSize, 0, 1, 0));
-	v.push_back(VERTEX(fSize, fSize, -fSize, 0, 1, 0));
-	v.push_back(VERTEX(fSize, fSize, fSize, 0, 1, 0));
-	v.push_back(VERTEX(-fSize, fSize, fSize, 0, 1, 0));
+	v.push_back(VERTEX(-fSize, fSize, -fSize, 0, 1, 0, 0, 0));
+	v.push_back(VERTEX(fSize, fSize, -fSize, 0, 1, 0, 0, 1));
+	v.push_back(VERTEX(fSize, fSize, fSize, 0, 1, 0, 1, 1));
+	v.push_back(VERTEX(-fSize, fSize, fSize, 0, 1, 0, 1, 0));
 
-	v.push_back(VERTEX(-fSize, fSize, fSize, 0, 0, 1));
-	v.push_back(VERTEX(fSize, fSize, fSize, 0, 0, 1));
-	v.push_back(VERTEX(fSize, -fSize, fSize, 0, 0, 1));
-	v.push_back(VERTEX(-fSize, -fSize, fSize, 0, 0, 1));
+	v.push_back(VERTEX(-fSize, fSize, fSize, 0, 0, 1, 0, 0));
+	v.push_back(VERTEX(fSize, fSize, fSize, 0, 0, 1, 0, 1));
+	v.push_back(VERTEX(fSize, -fSize, fSize, 0, 0, 1, 1, 1));
+	v.push_back(VERTEX(-fSize, -fSize, fSize, 0, 0, 1, 1, 0));
 
-	v.push_back(VERTEX(-fSize, fSize, -fSize, -1, 0, 0));
-	v.push_back(VERTEX(-fSize, fSize, fSize, -1, 0, 0));
-	v.push_back(VERTEX(-fSize, -fSize, fSize, -1, 0, 0));
-	v.push_back(VERTEX(-fSize, -fSize, -fSize, -1, 0, 0));
+	v.push_back(VERTEX(-fSize, fSize, -fSize, -1, 0, 0, 0, 0));
+	v.push_back(VERTEX(-fSize, fSize, fSize, -1, 0, 0, 0, 1));
+	v.push_back(VERTEX(-fSize, -fSize, fSize, -1, 0, 0, 1, 1));
+	v.push_back(VERTEX(-fSize, -fSize, -fSize, -1, 0, 0, 1, 0));
 
-	v.push_back(VERTEX(fSize, fSize, fSize, 1, 0, 0));
-	v.push_back(VERTEX(fSize, fSize, -fSize, 1, 0, 0));
-	v.push_back(VERTEX(fSize, -fSize, -fSize, 1, 0, 0));
-	v.push_back(VERTEX(fSize, -fSize, fSize, 1, 0, 0));
+	v.push_back(VERTEX(fSize, fSize, fSize, 1, 0, 0, 0, 0));
+	v.push_back(VERTEX(fSize, fSize, -fSize, 1, 0, 0, 0, 1));
+	v.push_back(VERTEX(fSize, -fSize, -fSize, 1, 0, 0, 1, 1));
+	v.push_back(VERTEX(fSize, -fSize, fSize, 1, 0, 0, 1, 0));
 
-	v.push_back(VERTEX(fSize, fSize, -fSize, 0, 0, -1));
-	v.push_back(VERTEX(-fSize, fSize, -fSize, 0, 0, -1));
-	v.push_back(VERTEX(-fSize, -fSize, -fSize, 0, 0, -1));
-	v.push_back(VERTEX(fSize, -fSize, -fSize, 0, 0, -1));
+	v.push_back(VERTEX(fSize, fSize, -fSize, 0, 0, -1, 0, 0));
+	v.push_back(VERTEX(-fSize, fSize, -fSize, 0, 0, -1, 0, 1));
+	v.push_back(VERTEX(-fSize, -fSize, -fSize, 0, 0, -1, 1, 1));
+	v.push_back(VERTEX(fSize, -fSize, -fSize, 0, 0, -1, 1, 0));
 
-	v.push_back(VERTEX(fSize, -fSize, -fSize, 0, -1, 0));
-	v.push_back(VERTEX(-fSize, -fSize, -fSize, 0, -1, 0));
-	v.push_back(VERTEX(-fSize, -fSize, fSize, 0, -1, 0));
-	v.push_back(VERTEX(fSize, -fSize, fSize, 0, -1, 0));
+	v.push_back(VERTEX(fSize, -fSize, -fSize, 0, -1, 0, 0, 0));
+	v.push_back(VERTEX(-fSize, -fSize, -fSize, 0, -1, 0, 0, 1));
+	v.push_back(VERTEX(-fSize, -fSize, fSize, 0, -1, 0, 1, 1));
+	v.push_back(VERTEX(fSize, -fSize, fSize, 0, -1, 0, 1, 0));
 
-	m_pDevice->CreateVertexBuffer((sizeof(VERTEX) * v.size()), 0, VERTEX::FVF, D3DPOOL_DEFAULT, &m_pVertex, nullptr);
+	m_pDevice->CreateVertexBuffer(sizeof(VERTEX) * v.size(), 0, VERTEX::FVF, D3DPOOL_MANAGED, &m_pVertex, nullptr);
 	
 	int size = sizeof(VERTEX) * v.size();
 	void* vertices;
@@ -164,7 +157,7 @@ void Cube::_setupMesh(float fSize)
 	i.push_back(INDEX(20, 23, 21));
 	i.push_back(INDEX(21, 23, 22));
 
-	m_pDevice->CreateIndexBuffer(sizeof(INDEX) * i.size(), 0, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pIndex, nullptr);
+	m_pDevice->CreateIndexBuffer(sizeof(INDEX) * i.size(), 0, D3DFMT_INDEX32, D3DPOOL_MANAGED, &m_pIndex, nullptr);
 
 	size = sizeof(INDEX) * i.size();
 	void* indices;
@@ -176,6 +169,9 @@ void Cube::_setupMesh(float fSize)
 void Cube::_loadTexture(const std::wstring& strFile)
 {
 	D3DXCreateTextureFromFile(m_pDevice, strFile.c_str(), &m_pTexture);
+
+	m_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	m_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 }
 
 bool Cube::_initVertexShader()

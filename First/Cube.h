@@ -18,8 +18,8 @@ private:
 		TEXCOORD texcoord;
 
 		VERTEX() : position(), normal(), texcoord() {}
-		VERTEX(float _x, float _y, float _z, float _nx, float _ny, float _nz/*, float _u, float _v*/)
-			: position(_x, _y, _z), normal(_nx, _ny, _nz), texcoord(/*_u, _v*/) {}
+		VERTEX(float _x, float _y, float _z, float _nx, float _ny, float _nz, float _u, float _v)
+			: position(_x, _y, _z), normal(_nx, _ny, _nz), texcoord(_u, _v) {}
 
 		enum {FVF = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1)};
 	};
@@ -51,10 +51,9 @@ private:
 	D3DXMATRIX m_matWorld;
 
 public:
-	Cube(IDirect3DDevice9* pDevice, float fSize);
-	~Cube();
+	Cube(IDirect3DDevice9* pDevice, float fSize, const std::wstring& strFile);
+	virtual ~Cube();
 
-	void load(const std::wstring& stdFile);
 	void update(unsigned int timeMs);
 	void render();
 

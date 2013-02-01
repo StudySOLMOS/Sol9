@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "PCH.h"
 #include "Camera.h"
 
 Camera::Camera(IDirect3DDevice9* pDevice)

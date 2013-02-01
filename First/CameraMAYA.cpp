@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "PCH.h"
 #include "CameraMAYA.h"
 
 CameraMAYA::CameraMAYA(IDirect3DDevice9* pDevice)

@@ -1,12 +1,12 @@
-#include "stdafx.h"
+#include "PCH.h"
 #include "First.h"
 #include "CameraMAYA.h"
 #include "TimeManager.h"
 #include "Cube.h"
 
 const std::wstring g_strTitle = L"First by.Sol9";
-const unsigned int g_nWidth = 1600;
-const unsigned int g_nHeight = 900;
+const unsigned int g_nWidth = 800;
+const unsigned int g_nHeight = 600;
 
 IDirect3DDevice9* g_pd3dDevice = nullptr;
 ID3DXFont* g_pd3dFont = nullptr;
@@ -57,6 +57,7 @@ int main()
 	UpdateWindow(hWnd);
 
 	IDirect3D9* d3d = Direct3DCreate9(D3D9b_SDK_VERSION);
+
 	if (!d3d)
 		return 0;
 
@@ -95,7 +96,7 @@ int main()
 			DispatchMessage(&msg);
 
 			if (msg.message == WM_QUIT)
-				return (int)msg.wParam;
+				break;
 		}
 		else
 		{
@@ -121,6 +122,7 @@ int main()
 		}
 	}
 
+	cleanup();
 	return (int)msg.wParam;
 }
 
@@ -172,19 +174,19 @@ void initialize()
 	Light.Ambient.r = 0.5f;
 	Light.Ambient.g = 0.5f;
 	Light.Ambient.b = 0.5f;
-	Light.Direction = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	Light.Direction = D3DXVECTOR3(0.0f, -1.0f, 1.0f);
 	g_pd3dDevice->SetLight(0, &Light);
 	g_pd3dDevice->LightEnable(0, TRUE);
 
 	g_pCamera = new Camera(g_pd3dDevice);
-	g_pCamera->init(D3DXVECTOR3(0.0f, 300.0f, 300.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	g_pCamera->init(D3DXVECTOR3(0.0f, 300.0f, -300.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 
 	//g_pd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	//g_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	g_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	g_pTimeManager = new TimeManager;
 
-	g_pCube = new Cube(g_pd3dDevice, 80);
+	g_pCube = new Cube(g_pd3dDevice, 60, L"image.jpg");
 }
 
 void cleanup()
@@ -208,6 +210,7 @@ void cleanup()
 void update(unsigned int timeMs)
 {
 	g_pCube->update(timeMs);
+	g_pCamera->update(timeMs);
 }
 
 void render()
