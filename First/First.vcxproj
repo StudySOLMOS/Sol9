@@ -83,6 +83,7 @@
     <ClCompile Include="First.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PCH.cpp" />
+    <ClCompile Include="ShaderAdapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />

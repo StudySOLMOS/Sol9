@@ -80,7 +80,7 @@ int main()
 
 	d3d->Release();
 
-	if (FAILED(D3DXCreateFont(g_pd3dDevice, 12, 6, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+	if (FAILED(D3DXCreateFont(g_pd3dDevice, 12, 6, FW_LIGHT, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
 		DEFAULT_QUALITY, FF_DONTCARE, L"frquad", &g_pd3dFont)))
 		return 0;
 
@@ -186,7 +186,7 @@ void initialize()
 
 	g_pTimeManager = new TimeManager;
 
-	g_pCube = new Cube(g_pd3dDevice, 60, L"image.jpg");
+	g_pCube = new Cube(g_pd3dDevice, 60, "image.jpg");
 }
 
 void cleanup()

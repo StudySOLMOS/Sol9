@@ -1,23 +1,12 @@
 #include "PCH.h"
 #include "Cube.h"
 
-//#define _SHADER_ON_
-
-Cube::Cube(IDirect3DDevice9* pDevice, float fSize, const std::wstring& strFile)
+Cube::Cube(IDirect3DDevice9* pDevice, float fSize, const std::string& strFile)
 	: m_pDevice(pDevice)
 	, m_pVertex(nullptr), m_pIndex(nullptr), m_pTexture(nullptr)
-	, m_matWorld()
-	////// shader
-	, m_pVertexShader(nullptr), m_pPixelShader(nullptr)
-	, m_pVSConstantsTable(nullptr), m_pPSConstantsTable(nullptr)
-	////// shader
+	, m_matLocal()
 {
-	D3DXMatrixIdentity(&m_matWorld);
-
-#if defined (_SHADER_ON_)
-	_initVertexShader();
-	_initPixelShader();
-#endif
+	D3DXMatrixIdentity(&m_matLocal);
 
 	_setupMesh(fSize);
 	_loadTexture(strFile);
@@ -33,20 +22,6 @@ Cube::~Cube()
 
 	if (m_pTexture)
 		m_pTexture->Release();
-
-	////// shader
-	if (m_pVSConstantsTable)
-		m_pVSConstantsTable->Release();
-
-	if (m_pPSConstantsTable)
-		m_pPSConstantsTable->Release();
-
-	if (m_pVertexShader)
-		m_pVertexShader->Release();
-
-	if (m_pPixelShader)
-		m_pPixelShader->Release();
-	////// shader
 }
 
 void Cube::update(unsigned int timeMs)
@@ -56,7 +31,7 @@ void Cube::update(unsigned int timeMs)
 
 	D3DXMATRIX matTemp;
 	D3DXMatrixRotationYawPitchRoll(&matTemp, vRotate.y, vRotate.x, vRotate.z);
-	m_matWorld = matTemp * m_matWorld;
+	m_matLocal = matTemp * m_matLocal;
 }
 
 void Cube::render()
@@ -67,22 +42,7 @@ void Cube::render()
 	if (!m_pVertex || !m_pIndex)
 		return;
 
-#if defined (_SHADER_ON_)
-	////// shader
-	D3DXMATRIX v, p;
-	m_pDevice->GetTransform(D3DTS_VIEW, &v);
-	m_pDevice->GetTransform(D3DTS_PROJECTION, &p);
-
-	m_pVSConstantsTable->SetMatrix(m_pDevice, "matWorld", &m_matWorld);
-	m_pVSConstantsTable->SetMatrix(m_pDevice, "matView", &v);
-	m_pVSConstantsTable->SetMatrix(m_pDevice, "matProj", &p);
-
-	m_pDevice->SetVertexShader(m_pVertexShader);
-	m_pDevice->SetPixelShader(m_pPixelShader);
-	////// shader
-#else if
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
-#endif
+	m_pDevice->SetTransform(D3DTS_WORLD, &m_matLocal);
 
 	if (m_pTexture)
 		m_pDevice->SetTexture(0, m_pTexture);
@@ -166,102 +126,10 @@ void Cube::_setupMesh(float fSize)
 	m_pIndex->Unlock();
 }
 
-void Cube::_loadTexture(const std::wstring& strFile)
+void Cube::_loadTexture(const std::string& strFile)
 {
-	D3DXCreateTextureFromFile(m_pDevice, strFile.c_str(), &m_pTexture);
+	D3DXCreateTextureFromFileA(m_pDevice, strFile.c_str(), &m_pTexture);
 
 	m_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	m_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-}
-
-bool Cube::_initVertexShader()
-{
-	if (!m_pDevice)
-		return false;
-
-	ID3DXBuffer* buffer = nullptr;
-	ID3DXBuffer* error = nullptr;
-
-	HRESULT r = 0;
-	r = D3DXCompileShaderFromFile(L"vs.hlsl", nullptr, nullptr,
-		"vs_main", "vs_2_0", 0, &buffer, &error, &m_pVSConstantsTable);
-
-	if (FAILED(r))
-	{
-		if (error)
-		{
-			char* e = (char*)error->GetBufferPointer();
-			error->Release();
-
-			if (buffer)
-				buffer->Release();
-		}
-
-		return false;
-	}
-
-	if (error)
-		error->Release();
-
-	if (buffer)
-	{
-		r = m_pDevice->CreateVertexShader((DWORD*)buffer->GetBufferPointer(), &m_pVertexShader);
-
-		if (FAILED(r))
-		{
-			buffer->Release();
-			return false;
-		}
-
-		buffer->Release();
-		return true;
-	}
-
-	return false;
-}
-
-bool Cube::_initPixelShader()
-{
-	if (!m_pDevice)
-		return false;
-
-	ID3DXBuffer* buffer = nullptr;
-	ID3DXBuffer* error = nullptr;
-
-	HRESULT r = 0;
-	r = D3DXCompileShaderFromFile(L"ps.hlsl", nullptr, nullptr,
-		"ps_main", "ps_2_0", 0, &buffer, &error, &m_pPSConstantsTable);
-
-	if (FAILED(r))
-	{
-		if (error)
-		{
-			char* e = (char*)error->GetBufferPointer();
-			error->Release();
-
-			if (buffer)
-				buffer->Release();
-		}
-
-		return false;
-	}
-
-	if (error)
-		error->Release();
-
-	if (buffer)
-	{
-		r = m_pDevice->CreatePixelShader((DWORD*)buffer->GetBufferPointer(), &m_pPixelShader);
-
-		if (FAILED(r))
-		{
-			buffer->Release();
-			return false;
-		}
-
-		buffer->Release();
-		return true;
-	}
-
-	return false;
 }
