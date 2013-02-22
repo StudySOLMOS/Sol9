@@ -2,7 +2,7 @@
 #include "First.h"
 #include "CameraMAYA.h"
 #include "TimeManager.h"
-#include "Cube.h"
+#include "GeometryCreator.h"
 
 const std::wstring g_strTitle = L"First by.Sol9";
 const unsigned int g_nWidth = 800;
@@ -12,7 +12,8 @@ IDirect3DDevice9* g_pd3dDevice = nullptr;
 ID3DXFont* g_pd3dFont = nullptr;
 Camera* g_pCamera = nullptr;
 TimeManager* g_pTimeManager = nullptr;
-Cube* g_pCube = nullptr;
+GeometryCreator* g_pCreator = nullptr;
+Entity* g_pCube = nullptr;
 
 int g_nFPS = 0;
 int g_nFrame = 0;
@@ -183,10 +184,17 @@ void initialize()
 
 	//g_pd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	g_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	g_pd3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	g_pd3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 
 	g_pTimeManager = new TimeManager;
 
-	g_pCube = new Cube(g_pd3dDevice, 60, "image.jpg");
+	g_pCreator = new GeometryCreator(g_pd3dDevice);
+	g_pCube = new Entity(g_pCreator->createCube(60.0f));
+
+	IDirect3DTexture9* pTexture = nullptr;
+	D3DXCreateTextureFromFileA(g_pd3dDevice, "image.jpg", &pTexture);
+	g_pCube->setTexture(pTexture);
 }
 
 void cleanup()
@@ -218,7 +226,7 @@ void render()
 	g_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(240, 240, 240), 1.0f, 0);
 	g_pd3dDevice->BeginScene();
 
-	g_pCube->render();
+	g_pCube->render(g_pd3dDevice);
 
 	if (g_nFrame != g_nFPS)
 	{

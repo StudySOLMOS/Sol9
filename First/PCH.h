@@ -30,3 +30,10 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
+
+
+// sol9
+#include "types.h"
+#include "Entity.h"
+#include "Mesh.h"
