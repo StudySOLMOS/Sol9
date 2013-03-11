@@ -3,6 +3,7 @@
 #include "CameraMAYA.h"
 #include "TimeManager.h"
 #include "GeometryCreator.h"
+#include "ResourceManager.h"
 
 const std::wstring g_strTitle = L"First by.Sol9";
 const unsigned int g_nWidth = 800;
@@ -12,7 +13,6 @@ IDirect3DDevice9* g_pd3dDevice = nullptr;
 ID3DXFont* g_pd3dFont = nullptr;
 Camera* g_pCamera = nullptr;
 TimeManager* g_pTimeManager = nullptr;
-GeometryCreator* g_pCreator = nullptr;
 Entity* g_pCube = nullptr;
 
 int g_nFPS = 0;
@@ -189,12 +189,11 @@ void initialize()
 
 	g_pTimeManager = new TimeManager;
 
-	g_pCreator = new GeometryCreator(g_pd3dDevice);
-	g_pCube = new Entity(g_pCreator->createCube(60.0f));
+	ResourceManager textures(g_pd3dDevice);
+	GeometryCreator creator(g_pd3dDevice);
 
-	IDirect3DTexture9* pTexture = nullptr;
-	D3DXCreateTextureFromFileA(g_pd3dDevice, "image.jpg", &pTexture);
-	g_pCube->setTexture(pTexture);
+	g_pCube = new Entity(creator.createCube(60.0f));
+	g_pCube->setTexture(0, (Texture*)textures.createTexture("image.jpg"));
 }
 
 void cleanup()

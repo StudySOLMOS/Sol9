@@ -37,13 +37,16 @@ typedef std::vector<INDEX> _Indices;
 
 class GeometryCreator;
 class Renderer;
+class Texture;
 
 class MeshBuffer
 {
 private:
 	IDirect3DVertexBuffer9* m_pVertex;
 	IDirect3DIndexBuffer9* m_pIndex;
-	IDirect3DTexture9* m_pTexture;
+
+	Texture* m_pTexture;
+	D3DMATERIAL9 m_Material;
 
 	u32 m_nVertices;
 	u32 m_nIndices;
@@ -56,4 +59,7 @@ public:
 	~MeshBuffer();
 
 	void render(IDirect3DDevice9* pDevice);
+
+	void setTexture(Texture* pTexture);
+	void setMaterial(const D3DMATERIAL9& Material);
 };

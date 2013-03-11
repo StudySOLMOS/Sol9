@@ -27,10 +27,13 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+#include <algorithm>
+#include <list>
+#include <map>
+#include <set>
+#include <vector>
 #include <string>
 #include <sstream>
-#include <vector>
-#include <algorithm>
 
 
 // sol9

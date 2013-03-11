@@ -35,6 +35,11 @@ void Mesh::addMeshBuffer(MeshBuffer* pBuffer)
 	m_MeshBuffers.push_back(pBuffer);
 }
 
+MeshBuffer* Mesh::getMeshBuffer(u32 nIndex)
+{
+	return m_MeshBuffers[nIndex];
+}
+
 u32 Mesh::getMeshBufferCount() const
 {
 	return m_MeshBuffers.size();

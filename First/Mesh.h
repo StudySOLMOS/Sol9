@@ -17,5 +17,6 @@ public:
 
 	void addMeshBuffer(MeshBuffer* pBuffer);
 
+	MeshBuffer* getMeshBuffer(u32 nIndex);
 	u32 getMeshBufferCount() const;
 };
