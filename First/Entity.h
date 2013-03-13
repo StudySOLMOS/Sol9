@@ -1,12 +1,14 @@
 #pragma once
 
-class Mesh;
+#include "ReferenceCounter.h"
 
-class Entity
+class Mesh;
+class Texture;
+
+class Entity : public ReferenceCounter
 {
 private:
 	Mesh* m_pOwnerMesh;
-	IDirect3DTexture9* m_pTexture;
 	D3DXMATRIX m_matLocal;
 
 public:
@@ -16,5 +18,5 @@ public:
 	void update(unsigned int timeMs);
 	void render(IDirect3DDevice9* pDevice);
 
-	void setTexture(IDirect3DTexture9* pTexture);
+	void setTexture(u32 nLayer, Texture* pTexture);
 };

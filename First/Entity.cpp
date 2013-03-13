@@ -1,9 +1,10 @@
 #include "PCH.h"
 #include "Entity.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 Entity::Entity(Mesh* pMesh)
-	: m_pOwnerMesh(pMesh), m_pTexture(nullptr), m_matLocal()
+	: m_pOwnerMesh(pMesh), m_matLocal()
 {
 	D3DXMatrixIdentity(&m_matLocal);
 }
@@ -34,16 +35,16 @@ void Entity::render(IDirect3DDevice9* pDevice)
 
 	pDevice->SetTransform(D3DTS_WORLD, &m_matLocal);
 
-	if (m_pTexture)
-		pDevice->SetTexture(0, m_pTexture);
-
 	m_pOwnerMesh->render(pDevice);
 }
 
-void Entity::setTexture(IDirect3DTexture9* pTexture)
+void Entity::setTexture(u32 nLayer, Texture* pTexture)
 {
 	if (!pTexture)
 		return;
 
-	m_pTexture = pTexture;
+	if (!m_pOwnerMesh || m_pOwnerMesh->getMeshBufferCount() < nLayer)
+		return;
+
+	m_pOwnerMesh->getMeshBuffer(nLayer)->setTexture(pTexture);
 }

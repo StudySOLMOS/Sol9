@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Singleton.h"
 #include <windows.h>
 
-class TimeManager
+class TimeManager : public Singleton<TimeManager>
 {
 private:
 	LARGE_INTEGER freq;
