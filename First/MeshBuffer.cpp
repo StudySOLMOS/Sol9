@@ -17,7 +17,7 @@ MeshBuffer::~MeshBuffer()
 		m_pIndex->Release();
 
 	if (m_pTexture)
-		delete m_pTexture;
+		m_pTexture->detach();
 }
 
 void MeshBuffer::render(IDirect3DDevice9* pDevice)
@@ -40,8 +40,11 @@ void MeshBuffer::render(IDirect3DDevice9* pDevice)
 
 void MeshBuffer::setTexture(Texture* pTexture)
 {
-	if (pTexture)
-		m_pTexture = pTexture;
+	if (!pTexture)
+		return;
+
+	m_pTexture = pTexture;
+	pTexture->attach();
 }
 
 void MeshBuffer::setMaterial(const D3DMATERIAL9& Material)

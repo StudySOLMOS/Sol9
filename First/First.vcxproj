@@ -97,11 +97,13 @@
     <ClInclude Include="GeometryCreator.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshBuffer.h" />
+    <ClInclude Include="ReferenceCounter.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ShaderAdapter.h" />
     <ClInclude Include="PCH.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />

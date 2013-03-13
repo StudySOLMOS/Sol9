@@ -18,6 +18,7 @@ typedef double f64;
 
 namespace sol9
 {
+
 	#ifdef PI
 	#undef PI
 	#endif
@@ -96,4 +97,5 @@ namespace sol9
 	{
 		return b = !b;
 	}
+
 } // namespace sol9

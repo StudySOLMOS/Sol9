@@ -1,9 +1,11 @@
 #pragma once
 
+#include "ReferenceCounter.h"
+
 class Mesh;
 class Texture;
 
-class Entity
+class Entity : public ReferenceCounter
 {
 private:
 	Mesh* m_pOwnerMesh;

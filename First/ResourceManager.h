@@ -1,8 +1,9 @@
 #pragma once
 
-class Texture;
+#include "ReferenceCounter.h"
+#include "Singleton.h"
 
-class Resource
+class Resource : public ReferenceCounter
 {
 private:
 public:
@@ -10,15 +11,14 @@ public:
 	virtual ~Resource();
 };
 
-class ResourceManager
+class ResourceManager : public Singleton<ResourceManager>
 {
 private:
-	IDirect3DDevice9* m_pDevice;
 	std::map<std::string, Resource*> m_ResourceMap;
 
 public:
-	ResourceManager(IDirect3DDevice9* pDevice);
+	ResourceManager();
 	~ResourceManager();
 
-	Resource* createTexture(const std::string& strFileName);
+	Resource* createTexture(IDirect3DDevice9* pDevice, const std::string& strFileName);
 };

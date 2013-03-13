@@ -12,7 +12,6 @@ const unsigned int g_nHeight = 600;
 IDirect3DDevice9* g_pd3dDevice = nullptr;
 ID3DXFont* g_pd3dFont = nullptr;
 Camera* g_pCamera = nullptr;
-TimeManager* g_pTimeManager = nullptr;
 Entity* g_pCube = nullptr;
 
 int g_nFPS = 0;
@@ -101,8 +100,9 @@ int main()
 		}
 		else
 		{
-			static unsigned int before = g_pTimeManager->time();
-			unsigned int current = g_pTimeManager->time();
+			TimeManager* pTimeManager = TimeManager::instance();
+			static unsigned int before = pTimeManager->time();
+			unsigned int current = pTimeManager->time();
 			unsigned int tick = current - before;
 
 			update(tick);
@@ -187,13 +187,10 @@ void initialize()
 	g_pd3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_pd3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 
-	g_pTimeManager = new TimeManager;
-
-	ResourceManager textures(g_pd3dDevice);
 	GeometryCreator creator(g_pd3dDevice);
 
 	g_pCube = new Entity(creator.createCube(60.0f));
-	g_pCube->setTexture(0, (Texture*)textures.createTexture("image.jpg"));
+	g_pCube->setTexture(0, (Texture*)ResourceManager::instance()->createTexture(g_pd3dDevice, "image.jpg"));
 }
 
 void cleanup()
@@ -203,9 +200,6 @@ void cleanup()
 
 	if (g_pCamera)
 		delete g_pCamera;
-
-	if (g_pTimeManager)
-		delete g_pTimeManager;
 
 	if (g_pd3dFont)
 		g_pd3dFont->Release();
