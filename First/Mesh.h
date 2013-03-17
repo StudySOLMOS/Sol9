@@ -1,7 +1,5 @@
 #pragma once
 
-#include "MeshBuffer.h"
-
 class MeshBuffer;
 
 class Mesh

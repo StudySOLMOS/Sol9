@@ -27,6 +27,25 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+#define TIXML_USE_STL
+#include <tinyxml.h>
+
+#if defined _MT
+	#if defined _DLL
+		#if defined _DEBUG
+			#pragma comment(lib, "tinyxmlSTL_MDd")
+		#else
+			#pragma comment(lib, "tinyxmlSTL_MD")
+		#endif
+	#else
+		#if defined _DEBUG
+			#pragma comment(lib, "tinyxmlSTL_MTd")
+		#else
+			#pragma comment(lib, "tinyxmlSTL_MT")
+		#endif
+	#endif
+#endif
+
 #include <algorithm>
 #include <list>
 #include <map>

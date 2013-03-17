@@ -6,6 +6,13 @@ MeshBuffer::MeshBuffer()
 	: m_pVertex(nullptr), m_pIndex(nullptr), m_pTexture(nullptr)
 	, m_nVertices(0), m_nIndices(0)
 {
+	ZeroMemory(&m_Material, sizeof(D3DMATERIAL9));
+	m_Material.Diffuse.r = 0.7f;
+	m_Material.Diffuse.g = 0.7f;
+	m_Material.Diffuse.b = 0.7f;
+	m_Material.Ambient.r = 0.5f;
+	m_Material.Ambient.g = 0.5f;
+	m_Material.Ambient.b = 0.5f;
 }
 
 MeshBuffer::~MeshBuffer()
@@ -28,7 +35,7 @@ void MeshBuffer::render(IDirect3DDevice9* pDevice)
 	if (!m_pVertex || !m_pIndex)
 		return;
 
-	if (m_pTexture && m_pTexture->getTexture())
+	if (m_pTexture)
 		pDevice->SetTexture(0, m_pTexture->getTexture());
 
 	pDevice->SetMaterial(&m_Material);
