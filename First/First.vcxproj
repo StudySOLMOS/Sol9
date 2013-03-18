@@ -85,6 +85,7 @@
     <ClCompile Include="GeometryCreator.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshBuffer.cpp" />
+    <ClCompile Include="ColladaLoader.cpp" />
     <ClCompile Include="PCH.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="GeometryCreator.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshBuffer.h" />
+    <ClInclude Include="ColladaLoader.h" />
     <ClInclude Include="ReferenceCounter.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />

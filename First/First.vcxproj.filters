@@ -37,6 +37,9 @@
     <ClCompile Include="GeometryCreator.cpp">
       <Filter>render\resource</Filter>
     </ClCompile>
+    <ClCompile Include="ColladaLoader.cpp">
+      <Filter>render\resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMAYA.h">
@@ -91,6 +94,9 @@
       <Filter>render\resource</Filter>
     </ClInclude>
     <ClInclude Include="GeometryCreator.h">
+      <Filter>render\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ColladaLoader.h">
       <Filter>render\resource</Filter>
     </ClInclude>
   </ItemGroup>

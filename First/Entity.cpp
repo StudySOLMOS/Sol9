@@ -1,6 +1,7 @@
 #include "PCH.h"
 #include "Entity.h"
 #include "Mesh.h"
+#include "MeshBuffer.h"
 #include "Texture.h"
 
 Entity::Entity(Mesh* pMesh)

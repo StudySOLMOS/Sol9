@@ -1,5 +1,6 @@
 #include "PCH.h"
 #include "Mesh.h"
+#include "MeshBuffer.h"
 
 Mesh::Mesh()
 	: m_MeshBuffers()

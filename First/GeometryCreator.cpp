@@ -1,6 +1,7 @@
 #include "PCH.h"
 #include "GeometryCreator.h"
 #include "Mesh.h"
+#include "MeshBuffer.h"
 
 GeometryCreator::GeometryCreator(IDirect3DDevice9* pDevice)
 	: m_pDevice(pDevice)
